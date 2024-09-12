@@ -1,17 +1,18 @@
 type HeaderProps = {
-  student: string;
-  degree: string;
-  points: number;
+  student: {
+    name: string;
+    degree: string;
+    points: number;
+  };
 };
 
-function Header(props: HeaderProps) {
+function Header({ student }: HeaderProps) {
   return (
-    <div>
-      <h1>{props.student}</h1>
-      <p>
-        {props.degree} {props.points} studiepoeng
-      </p>
-    </div>
+    <header>
+      <h1>{student.name}</h1>
+      <p>{student.degree}</p>
+      <p>{student.points} studiepoeng</p>
+    </header>
   );
 }
 

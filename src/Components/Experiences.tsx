@@ -1,15 +1,22 @@
-type ExperienceProps = {
-  experienceOne: string;
-  experienceTwo: string;
+import Experience from "./Experience";
+
+type Experience = {
+  name: string;
 };
 
-function Experiences(props: ExperienceProps) {
+type ExperiencesProps = {
+  experiences: Experience[];
+};
+export default function Experiences({ experiences }: ExperiencesProps) {
   return (
     <div>
-      <p>{props.experienceOne}</p>
-      <p>{props.experienceTwo}</p>
+      <h2>Experiences</h2>
+      {experiences.map((experience, index) => (
+        <Experience key={index} name={experience.name}>
+          {/* Children for fleksibilitet - kan bruke mer enn bare navn
+          <p>Additional details about {experience.name}</p> */}
+        </Experience>
+      ))}
     </div>
   );
 }
-
-export default Experiences;

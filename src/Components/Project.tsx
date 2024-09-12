@@ -1,19 +1,13 @@
 type ProjectProps = {
   title: string;
   description: string;
-  techUsed: string;
-  projectLink: string;
 };
 
-function Project(props: ProjectProps) {
+export default function Project({ title, description }: ProjectProps) {
   return (
-    <div>
-      <h2>{props.title}</h2>
-      <p>{props.description}</p>
-      <p>{props.techUsed}</p>
-      <p>{props.projectLink}</p>
-    </div>
+    <article className="flex flex-col flex-wrap border-2 border-solid rounded  border-white">
+      <h3>{title}</h3>
+      <p>{description}</p>
+    </article>
   );
 }
-
-export default Project;

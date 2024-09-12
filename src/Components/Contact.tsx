@@ -1,11 +1,14 @@
 type ContactProps = {
-  email: string;
+  student: {
+    email: string;
+  };
 };
 
-function Contact(props: ContactProps) {
+function Contact({ student }: ContactProps) {
   return (
     <div>
-      <p>{props.email}</p>
+      <h2>Kontaktinformasjon</h2>
+      <p>{student.email}</p>
     </div>
   );
 }

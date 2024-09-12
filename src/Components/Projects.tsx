@@ -1,34 +1,25 @@
 import Project from "./Project";
 
-function Projects() {
+type Project = {
+  id: number;
+  title: string;
+  description: string;
+};
+
+type ProjectsProps = {
+  projects: Project[];
+};
+
+export default function Projects({ projects }: ProjectsProps) {
   return (
-    <>
-      <Project
-        title="Prosjekt 1"
-        description="Dette er en forklaring på prosjektet"
-        techUsed="React Typescript Javascript"
-        projectLink="https://google.no"
-      />
-      <Project
-        title="Prosjekt 2"
-        description="Dette er en forklaring på prosjektet"
-        techUsed="React Typescript Javascript"
-        projectLink="https://google.no"
-      />
-      <Project
-        title="Prosjekt 3"
-        description="Dette er en forklaring på prosjektet"
-        techUsed="React Typescript Javascript"
-        projectLink="https://google.no"
-      />
-      <Project
-        title="Prosjekt 4"
-        description="Dette er en forklaring på prosjektet"
-        techUsed="React Typescript Javascript"
-        projectLink="https://google.no"
-      />
-    </>
+    <div>
+      {projects.map((project) => (
+        <Project
+          key={project.id}
+          title={project.title}
+          description={project.description}
+        />
+      ))}
+    </div>
   );
 }
-
-export default Projects;

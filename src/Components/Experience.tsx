@@ -1,10 +1,17 @@
-import { Children } from "react";
+type ExperienceProps = {
+  name: string;
 
-function Experience() {
-  return;
-  <div>
-    <p>{Children}</p>
-  </div>;
+  children?: React.ReactNode;
+};
+
+function Experience({ name, children }: ExperienceProps) {
+  return (
+    <div>
+      <h3>{name}</h3>
+
+      {children}
+    </div>
+  );
 }
 
 export default Experience;

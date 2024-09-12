@@ -2,26 +2,70 @@ import "./App.css";
 import Contact from "./Components/Contact";
 import Experiences from "./Components/Experiences";
 import Header from "./Components/Header";
+import MainNav from "./Components/MainNav";
 import Projects from "./Components/Projects";
 
 function App() {
-  const student = "Halgeir Geirson";
-  const degree = "Bachelor IT";
-  const points = 180;
-  const experienceOne = "Figma UI for customer X";
-  const experienceTwo = "Website for customer Y";
-  const email = "student@hiof.no";
+  type Experience = {
+    name: string;
+  };
+
+  type Project = {
+    id: number;
+    title: string;
+    description: string;
+  };
+
+  type StudentType = {
+    name: string;
+    degree: string;
+    points: number;
+    email: string;
+    experiences: Experience[];
+  };
+
+  const student: StudentType = {
+    name: "Sander Nilsen",
+    degree: "Bachelor IT",
+    points: 180,
+    email: "student@hiof.no",
+    experiences: [
+      { name: "Figma UI for customer X" },
+      { name: "Website for customer Y" },
+    ],
+  };
+  const projects: Project[] = [
+    {
+      id: 1,
+      title: "Project 1",
+      description: "Jobbet med blablabla",
+    },
+    {
+      id: 2,
+      title: "Project 2",
+      description: "Jobbet med blablabla",
+    },
+    {
+      id: 3,
+      title: "Project 3",
+      description: "Jobbet med blablabla",
+    },
+    {
+      id: 4,
+      title: "Project 4",
+      description: "Jobbet med blablabla",
+    },
+  ];
 
   return (
     <div>
-      <Header student={student} degree={degree} points={points} />
-      <Experiences
-        experienceOne={experienceOne}
-        experienceTwo={experienceTwo}
-      />
-      <Contact email={email} />
-
-      <Projects />
+      <MainNav />
+      <main className="text-white">
+        <Header student={student} />
+        <Experiences experiences={student.experiences} />
+        <Projects projects={projects} />
+        <Contact student={student} />
+      </main>
     </div>
   );
 }

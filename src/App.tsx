@@ -1,11 +1,10 @@
 import "./App.css";
 import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-
 import MainNav from "./Components/MainNav";
-
 import HomePage from "./Pages/HomePage";
 import ContactPage from "./Pages/ContactPage";
+import ProjectPage from "./Pages/ProjectPage";
 
 function App() {
   type Project = {
@@ -19,7 +18,7 @@ function App() {
     degree: string;
     points: number;
     email: string;
-    experiences: Experience[];
+    experiences: { name: string }[];
   };
 
   const student: StudentType = {
@@ -84,6 +83,7 @@ function App() {
               />
             }
           />
+          <Route path="/projects" element={<ProjectPage />} />
           <Route path="/contact" element={<ContactPage student={student} />} />
         </Routes>
       </Router>

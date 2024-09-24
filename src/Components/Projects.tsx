@@ -8,17 +8,30 @@ type Project = {
 
 type ProjectsProps = {
   projects: Project[];
+  onRemoveProject: (id: number) => void;
 };
 
-export default function Projects({ projects }: ProjectsProps) {
+export default function Projects({ projects, onRemoveProject }: ProjectsProps) {
+  if (projects.length === 0) {
+    return <p>Ingen prosjekter</p>;
+  }
   return (
     <div>
+      <h2>Totalt antall prosjekter: {projects.length}</h2> {/* Oppsummering */}
       {projects.map((project) => (
-        <Project
+        <div
           key={project.id}
-          title={project.title}
-          description={project.description}
-        />
+          className="flex flex-col flex-wrap border-2 border-solid rounded  border-white"
+        >
+          <h3>{project.title}</h3>
+          <p>{project.description}</p>
+          <button
+            onClick={() => onRemoveProject(project.id)}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Fjern prosjekt
+          </button>
+        </div>
       ))}
     </div>
   );

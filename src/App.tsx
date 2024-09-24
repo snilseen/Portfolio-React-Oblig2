@@ -1,15 +1,13 @@
 import "./App.css";
-import Contact from "./Components/Contact";
-import Experiences from "./Components/Experiences";
-import Header from "./Components/Header";
+import { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
 import MainNav from "./Components/MainNav";
-import Projects from "./Components/Projects";
+
+import HomePage from "./Pages/HomePage";
+import ContactPage from "./Pages/ContactPage";
 
 function App() {
-  type Experience = {
-    name: string;
-  };
-
   type Project = {
     id: number;
     title: string;
@@ -34,7 +32,7 @@ function App() {
       { name: "Website for customer Y" },
     ],
   };
-  const projects: Project[] = [
+  const [projects, setProjects] = useState<Project[]>([
     {
       id: 1,
       title: "Project 1",
@@ -55,17 +53,40 @@ function App() {
       title: "Project 4",
       description: "Jobbet med blablabla",
     },
-  ];
+  ]);
+
+  const handleAddProject = (newProject: {
+    title: string;
+    description: string;
+  }) => {
+    const newId =
+      projects.length > 0 ? projects[projects.length - 1].id + 1 : 1;
+    setProjects([...projects, { id: newId, ...newProject }]);
+  };
+
+  const handleRemoveProject = (id: number) => {
+    setProjects(projects.filter((project) => project.id !== id));
+  };
 
   return (
     <div>
-      <MainNav />
-      <main className="text-white">
-        <Header student={student} />
-        <Experiences experiences={student.experiences} />
-        <Projects projects={projects} />
-        <Contact student={student} />
-      </main>
+      <Router>
+        <MainNav />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomePage
+                student={student}
+                projects={projects}
+                handleAddProject={handleAddProject}
+                handleRemoveProject={handleRemoveProject}
+              />
+            }
+          />
+          <Route path="/contact" element={<ContactPage student={student} />} />
+        </Routes>
+      </Router>
     </div>
   );
 }

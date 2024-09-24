@@ -5,7 +5,7 @@ type ProjectProps = {
 
 export default function Project({ title, description }: ProjectProps) {
   return (
-    <article className="flex flex-col flex-wrap border-2 border-solid rounded  border-white">
+    <article>
       <h3>{title}</h3>
       <p>{description}</p>
     </article>

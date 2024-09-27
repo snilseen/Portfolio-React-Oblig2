@@ -12,11 +12,10 @@ function ProjectPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  // 1.4 Fetch projects from the server
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch("http://localhost:3000/projects"); // Ensure the correct backend URL
+        const response = await fetch("http://localhost:3000/projects");
         if (!response.ok) {
           throw new Error("Failed to fetch projects");
         }
@@ -32,18 +31,16 @@ function ProjectPage() {
   }, []);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col text-white">
       <h1 className="text-white font-bold m-5 ">Projects</h1>
       {error && <p>{error}</p>}
       {projects.length === 0 ? (
-        <p>No projects available</p>
+        <p>Ingen prosjekter tilgjengelig.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {" "}
-          {/* Her bruker vi grid med 3 kolonner */}
           {projects.map((project) => (
             <div
-              className="bg-white shadow-sm border border-slate-200 rounded-lg p-4"
+              className="bg-white text-black shadow-sm border border-slate-200 rounded-lg p-4"
               key={project.id}
             >
               <h2 className="font-bold text-lg">{project.title}</h2>

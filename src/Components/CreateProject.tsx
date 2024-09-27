@@ -7,21 +7,33 @@ type CreateProjectProps = {
 function CreateProject({ onAddProject }: CreateProjectProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [error, setError] = useState("");
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (title.trim() === "" || description.trim() === "") {
+      setError("Tittel eller beskrivelse kan ikke være tomme.");
+      return;
+    }
     if (title && description) {
       onAddProject({ title, description });
       setTitle("");
       setDescription("");
+      setError("");
     }
   };
+
   return (
     <div className="w-full max-w-xs mx-auto mt-5">
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
       >
-        <label className="block text-gray-700 text-sm font-bold mb-2">
+        <label
+          htmlFor="title"
+          className="block text-gray-700 text-sm font-bold mb-2"
+        >
           Prosjekttittel:
           <input
             value={title}
@@ -31,7 +43,10 @@ function CreateProject({ onAddProject }: CreateProjectProps) {
           />
         </label>
         <br />
-        <label className="block text-gray-700 text-sm font-bold mb-2">
+        <label
+          htmlFor="beskrivelse"
+          className="block text-gray-700 text-sm font-bold mb-2"
+        >
           Prosjektbeskrivelse:
           <input
             className="shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -47,6 +62,7 @@ function CreateProject({ onAddProject }: CreateProjectProps) {
         >
           Legg til prosjekt
         </button>
+        <p>{error && <p className="text-red-500">{error}</p>}</p>
       </form>
     </div>
   );

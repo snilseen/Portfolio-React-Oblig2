@@ -13,7 +13,6 @@ function ContactForm({ onSubmit }: ContactFormProps) {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Enkel validering
     if (name.trim() === "" || message.trim() === "") {
       setError("Navn og melding kan ikke være tomme.");
       return;
@@ -71,7 +70,6 @@ function ContactForm({ onSubmit }: ContactFormProps) {
           Send
         </button>
 
-        {/* Vise valideringsfeil hvis de finnes */}
         {error && <p className="text-red-500">{error}</p>}
       </form>
     </div>

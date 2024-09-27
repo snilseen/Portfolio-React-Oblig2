@@ -14,7 +14,7 @@ function Experiences({ experiences }: ExperiencesProps) {
 
   return (
     <div>
-      <h2>Experiences</h2>
+      <h2>Experiences:</h2>
       {experiences.map((experience, index) => (
         <Experience key={index} name={experience.name} />
       ))}

@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { validateFields } from "../utils/validation";
 
 type ContactFormProps = {
   onSubmit: (formData: { name: string; message: string }) => void;
@@ -13,8 +14,21 @@ function ContactForm({ onSubmit }: ContactFormProps) {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (name.trim() === "" || message.trim() === "") {
-      setError("Navn og melding kan ikke være tomme.");
+    // if (name.trim() === "" || message.trim() === "") {
+    //   setError("Navn og melding kan ikke være tomme.");
+    //   return;
+    // }
+
+    // Lagde en mer dynamisk validationcheck som kan bli gjenrbrukt i flere komponenter.
+    const errorMessage = validateFields([
+      {
+        name: "Navn",
+        value: name,
+      },
+      { name: "Melding", value: message },
+    ]);
+    if (errorMessage) {
+      setError(errorMessage);
       return;
     }
 

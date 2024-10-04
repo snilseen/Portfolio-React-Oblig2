@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { validateFields } from "../utils/validation";
 
 type CreateProjectProps = {
   onAddProject: (newProject: { title: string; description: string }) => void;
@@ -12,10 +13,22 @@ function CreateProject({ onAddProject }: CreateProjectProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (title.trim() === "" || description.trim() === "") {
-      setError("Tittel eller beskrivelse kan ikke være tomme.");
+    // if (title.trim() === "" || description.trim() === "") {
+    //   setError("Tittel eller beskrivelse kan ikke være tomme.");
+    //   return;
+    // }
+
+    // Lagde en mer dynamisk validationcheck som kan bli gjenrbrukt i flere komponenter.
+    const errorMessage = validateFields([
+      { name: "Prosjekttittel", value: title },
+      { name: "Prosjekt beskrivelse", value: description },
+    ]);
+
+    if (errorMessage) {
+      setError(errorMessage);
       return;
     }
+
     if (title && description) {
       onAddProject({ title, description });
       setTitle("");

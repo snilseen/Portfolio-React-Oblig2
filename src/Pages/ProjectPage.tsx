@@ -1,34 +1,15 @@
-import { useState, useEffect } from "react";
-
-type Project = {
-  id: number;
-  title: string;
-  description: string;
-  createdAt: string;
-  category: string;
-};
+import { useProjects } from "../hooks/useProjects";
 
 function ProjectPage() {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const { projects, error, loading } = useProjects();
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/projects");
-        if (!response.ok) {
-          throw new Error("Failed to fetch projects");
-        }
-        const data = await response.json();
-        setProjects(data);
-      } catch (err) {
-        setError("Could not fetch projects");
-        console.error("Error fetching projects:", err);
-      }
-    };
+  if (loading) {
+    return <p className="text-white font-bold">Laster Prosjekter...</p>;
+  }
 
-    fetchProjects();
-  }, []);
+  if (error) {
+    return <p className="text-white font-bold">{error}</p>;
+  }
 
   return (
     <div className="flex flex-col text-white">

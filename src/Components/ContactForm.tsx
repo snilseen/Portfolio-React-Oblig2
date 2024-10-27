@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { validateFields } from "../utils/validation";
+import { validateFields } from "../utils/formvalidation";
 
 type ContactFormProps = {
   onSubmit: (formData: { name: string; message: string }) => void;

@@ -6,7 +6,7 @@ function MainNav() {
       <Link className="justify-start text-xl font-extrabold text-white" to="/">
         Sander Nilsen
       </Link>
-      <ul className="flex justify-end font-bold no-underline text-white">
+      <ul className="flex justify-end font-bold no-underline text-white mx-4">
         <li className="mx-4">
           <Link to="/about">About</Link>
         </li>

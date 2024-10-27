@@ -9,7 +9,7 @@ type ContactProps = {
 };
 
 function ContactPage({ student }: ContactProps) {
-  const [submittedData, setSubmittedData] = useState(null);
+  const [submittedData, setSubmittedData] = useState({});
 
   const handleFormSubmit = (formData: { name: string; message: string }) => {
     const data = {

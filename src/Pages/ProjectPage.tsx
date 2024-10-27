@@ -1,4 +1,6 @@
 import { useProjects } from "../hooks/useProjects";
+import { format } from "date-fns";
+import { nb } from "date-fns/locale";
 
 function ProjectPage() {
   const { projects, error, loading } = useProjects();
@@ -27,7 +29,21 @@ function ProjectPage() {
               <h2 className="font-bold text-lg">{project.title}</h2>
               <p>{project.description}</p>
               <p>Category: {project.category}</p>
-              <p>Created at: {project.createdAt}</p>
+              <p>
+                {format(new Date(project.createdAt), "dd. MMMM yyyy", {
+                  locale: nb,
+                })}
+              </p>
+              <p>
+                <a href={project.link}>{project.link}</a>
+              </p>
+              <p>Status: {project.status}</p>
+              <p>Public: {project.public ? "Yes" : "No"}</p>
+              <p>Created At: {project.createdAt}</p>
+              {project.publishedAt && (
+                <p>Published At: {project.publishedAt}</p>
+              )}
+              <p>Tags: {project.tags.join(", ")}</p>
             </div>
           ))}
         </div>

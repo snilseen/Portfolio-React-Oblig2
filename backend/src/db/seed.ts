@@ -1,41 +1,47 @@
-import "dotenv/config";
-import { db } from "./config";
-import { projectsTable } from "./schema/projects";
+import db from "./db";
+import { createProjectsTable } from "./tables";
 
-async function main() {
-  try {
-    // Eksempeldata for prosjektet
-    const project = {
-      title: "My Awesome Project",
-      description: "A comprehensive project example using Drizzle ORM.",
-      createdAt: new Date().toISOString(),
-      publishedAt: new Date().toISOString(),
-      category: "Web Development",
+function seedProjects() {
+  // Opprett tabellen først
+  createProjectsTable();
+
+  // Tøm eksisterende data
+  db.prepare("DELETE FROM projects").run();
+
+  // Legg inn testdata
+  const projects = [
+    {
+      title: "Demo Project 1",
+      description: "This is a demo project",
+      category: "Web",
       link: "https://example.com",
-      public: true,
+      public: 1,
       status: "active",
-      tags: ["typescript", "drizzle-orm", "sqlite"].join(","), // Lagre som kommaseparert streng
-    };
+      tags: "web,demo,test",
+      publishedAt: new Date().toISOString(),
+    },
+    {
+      title: "Demo Project 2",
+      description: "Another demo project",
+      category: "Mobile",
+      public: 0,
+      status: "completed",
+      tags: "mobile,demo",
+      publishedAt: new Date().toISOString(),
+    },
+  ];
 
-    // Sett inn prosjektet i `projectsTable`
-    await db.insert(projectsTable).values(project);
-    console.log("New project created!");
+  const insert = db.prepare(`
+    INSERT INTO projects (title, description, category, link, public, status, tags, publishedAt)
+    VALUES (@title, @description, @category, @link, @public, @status, @tags, @publishedAt)
+  `);
 
-    // Hent alle prosjekter for å bekrefte
-    const projects = await db.select().from(projectsTable);
-    console.log("Current projects in the database: ", projects);
-  } catch (error) {
-    console.error("Error seeding database:", error);
-    process.exit(1);
-  }
+  projects.forEach((project) => insert.run(project));
+
+  console.log("Database seeded!");
 }
 
-main()
-  .then(() => {
-    console.log("Database seeding completed");
-    process.exit(0);
-  })
-  .catch((error) => {
-    console.error("Error seeding database:", error);
-    process.exit(1);
-  });
+// Kjør seeding hvis denne filen kjøres direkte
+if (require.main === module) {
+  seedProjects();
+}

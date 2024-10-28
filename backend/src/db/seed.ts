@@ -11,10 +11,10 @@ function seedProjects() {
       description: "A personal portfolio showcasing my projects and blogs.",
       category: "Web Development",
       link: "https://google.com",
-      public: 1, // SQLite bruker 1/0 for boolean
+      public: 1, 
       status: "completed",
       publishedAt: new Date().toISOString(),
-      tags: "HTML,CSS,JavaScript", // Kommaseparert streng for tags
+      tags: "HTML,CSS,JavaScript", 
     },
     {
       title: "Task Manager",

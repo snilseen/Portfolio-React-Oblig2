@@ -2,7 +2,17 @@ import { useProjects } from "../hooks/useProjects";
 import ProjectCard from "./ProjectCard";
 
 function ProjectList() {
-  const { projects, error, loading } = useProjects();
+  const { projects, error, loading, deleteProject, refreshProjects } =
+    useProjects();
+
+  const handleDeleteProject = async (id: number) => {
+    try {
+      await deleteProject(id);
+      await refreshProjects(); // Oppdater listen etter sletting
+    } catch (err) {
+      console.error("Failed to delete project:", err);
+    }
+  };
 
   if (loading) {
     return (
@@ -31,10 +41,16 @@ function ProjectList() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {projects.map((project) => (
-        <ProjectCard
-          key={project.id || `${project.title}-${project.publishedAt}`}
-          project={project}
-        />
+        <div key={project.id} className="relative">
+          <ProjectCard project={project} />
+          <button
+            onClick={() => project.id && handleDeleteProject(project.id)}
+            className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
+            aria-label="Delete project"
+          >
+            ×
+          </button>
+        </div>
       ))}
     </div>
   );

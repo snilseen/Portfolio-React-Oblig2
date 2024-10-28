@@ -17,28 +17,6 @@ app.use("*", cors({ origin: "http://localhost:5173", credentials: true }));
 // Opprett tabellen ved oppstart
 createProjectsTable();
 
-// Hent alle prosjekter
-// app.get("/api/projects", (c) => {
-//   const projectsFromDb = db.prepare("SELECT * FROM projects").all();
-
-//   // Valider data fra databasen
-//   const projects = projectsFromDb.map((project) => {
-//     const validatedDbProject = projectDbSchema.parse(project);
-
-//     // Transformer til response format
-//     return projectResponseSchema.parse({
-//       ...validatedDbProject,
-//       public: Boolean(validatedDbProject.public),
-//       tags: validatedDbProject.tags ? validatedDbProject.tags.split(",") : [],
-//     });
-//   });
-
-//   return c.json({
-//     success: true,
-//     data: projects,
-//   });
-// });
-
 app.get("/api/projects", (c) => {
   try {
     const projects = db.prepare("SELECT * FROM projects").all();

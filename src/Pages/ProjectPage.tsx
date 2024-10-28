@@ -1,9 +1,10 @@
 import { useProjects } from "../hooks/useProjects";
-import { format } from "date-fns";
-import { nb } from "date-fns/locale";
+// import { format } from "date-fns";
+// import { nb } from "date-fns/locale";
+import ProjectList from "../Components/ProjectList";
 
 function ProjectPage() {
-  const { projects, error, loading } = useProjects();
+  const { error, loading } = useProjects();
 
   if (loading) {
     return <p className="text-white font-bold">Laster Prosjekter...</p>;
@@ -16,38 +17,7 @@ function ProjectPage() {
   return (
     <div className="flex flex-col text-white">
       <h1 className="text-white font-bold m-5 ">Projects</h1>
-      {error && <p>{error}</p>}
-      {projects.length === 0 ? (
-        <p>Ingen prosjekter tilgjengelig.</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project) => (
-            <div
-              className="bg-white text-black shadow-sm border border-slate-200 rounded-lg p-4"
-              key={project.id}
-            >
-              <h2 className="font-bold text-lg">{project.title}</h2>
-              <p>{project.description}</p>
-              <p>Category: {project.category}</p>
-              <p>
-                {format(new Date(project.createdAt), "dd. MMMM yyyy", {
-                  locale: nb,
-                })}
-              </p>
-              <p>
-                <a href={project.link}>{project.link}</a>
-              </p>
-              <p>Status: {project.status}</p>
-              <p>Public: {project.public ? "Yes" : "No"}</p>
-              <p>Created At: {project.createdAt}</p>
-              {project.publishedAt && (
-                <p>Published At: {project.publishedAt}</p>
-              )}
-              <p>Tags: {project.tags.join(", ")}</p>
-            </div>
-          ))}
-        </div>
-      )}
+      <ProjectList />
     </div>
   );
 }

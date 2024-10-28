@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react";
-import type { Project } from "../types";
+//import type { Project } from "../types";
 import { projectsURL } from "../config";
-import { projectsSchema } from "../utils/projects/validate";
+import { projectsSchema, type Project } from "../utils/projects/validate";
 //import { getUser } from "../../backend/features/users/auth";
 //import type { User } from "../..backend/features/types";
 
+type ApiResponse = {
+  success: boolean;
+  data: Project[];
+};
 export function useProjects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -12,28 +16,27 @@ export function useProjects() {
 
   useEffect(() => {
     const fetchProjects = async () => {
-      setLoading(true); // setter loadinga til true når vi først starter API-kallet.
+      setLoading(true);
       try {
-        const response = await fetch(`${projectsURL}`, {
+        const response = await fetch(projectsURL, {
           credentials: "include",
-        }); // Endret statisk variabel http://localhost:3000/projects
+        });
+
         if (!response.ok) {
           throw new Error("Failed to fetch projects");
         }
-        const data = await response.json();
-        console.log("Raw data from server:", data);
-        const parsedData = projectsSchema.parse(data.data);
 
-        //setProjects(data);
+        const responseData = (await response.json()) as ApiResponse;
+        console.log("Raw data from server:", responseData);
+
+        const parsedData = projectsSchema.parse(responseData.data);
         setProjects(parsedData);
-        console.log(projectsSchema.safeParse(data));
-
         setError(null);
       } catch (err) {
         setError("Could not fetch projects");
         console.error("Error fetching projects:", err);
       } finally {
-        setLoading(false); // setter loadinga til false etter at kallet på setLoading er ferdig.
+        setLoading(false);
       }
     };
 

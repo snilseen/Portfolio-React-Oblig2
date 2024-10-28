@@ -2,7 +2,7 @@
   "name": "backend",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "seed": "tsx db/seed.ts"
+    "seed": "tsx src/db/seed.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.1",

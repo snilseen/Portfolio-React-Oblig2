@@ -1,47 +1,56 @@
 import db from "./db";
-import { createProjectsTable } from "./tables";
 
 function seedProjects() {
-  // Opprett tabellen først
-  createProjectsTable();
-
-  // Tøm eksisterende data
+  // Først, slett eksisterende data (valgfritt)
   db.prepare("DELETE FROM projects").run();
 
   // Legg inn testdata
   const projects = [
     {
-      title: "Demo Project 1",
-      description: "This is a demo project",
-      category: "Web",
-      link: "https://example.com",
-      public: 1,
-      status: "active",
-      tags: "web,demo,test",
+      title: "Portfolio Website",
+      description: "A personal portfolio showcasing my projects and blogs.",
+      category: "Web Development",
+      link: "https://google.com",
+      public: 1, // SQLite bruker 1/0 for boolean
+      status: "completed",
       publishedAt: new Date().toISOString(),
+      tags: "HTML,CSS,JavaScript", // Kommaseparert streng for tags
     },
     {
-      title: "Demo Project 2",
-      description: "Another demo project",
-      category: "Mobile",
-      public: 0,
-      status: "completed",
-      tags: "mobile,demo",
+      title: "Task Manager",
+      description: "A simple task management application.",
+      category: "Application",
+      link: "https://google.com",
+      public: 1,
+      status: "active",
       publishedAt: new Date().toISOString(),
+      tags: "React,TypeScript,Node",
     },
   ];
 
-  const insert = db.prepare(`
-    INSERT INTO projects (title, description, category, link, public, status, tags, publishedAt)
-    VALUES (@title, @description, @category, @link, @public, @status, @tags, @publishedAt)
+  const stmt = db.prepare(`
+    INSERT INTO projects (
+      title, description, category, link, public, status, publishedAt, tags
+    ) VALUES (
+      @title, @description, @category, @link, @public, @status, @publishedAt, @tags
+    )
   `);
 
-  projects.forEach((project) => insert.run(project));
+  for (const project of projects) {
+    try {
+      stmt.run(project);
+      console.log(`Added project: ${project.title}`);
+    } catch (error) {
+      console.error(`Failed to add project ${project.title}:`, error);
+    }
+  }
 
-  console.log("Database seeded!");
+  console.log("Seeding completed!");
 }
 
 // Kjør seeding hvis denne filen kjøres direkte
 if (require.main === module) {
   seedProjects();
 }
+
+export { seedProjects };

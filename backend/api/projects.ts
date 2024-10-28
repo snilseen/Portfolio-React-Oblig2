@@ -6,7 +6,7 @@ export const projects = [
     category: "Web Development",
     link: "https://example.com/portfolio",
     public: true,
-    createdAt: new Date("2023-01-15").toISOString(),
+
     publishedAt: new Date("2023-02-01").toISOString(),
     status: "completed",
     tags: ["HTML", "CSS", "JavaScript"],
@@ -18,7 +18,7 @@ export const projects = [
     category: "E-commerce",
     link: "https://example.com/ecommerce",
     public: false,
-    createdAt: new Date("2023-05-10").toISOString(),
+
     publishedAt: new Date("2023-06-01").toISOString(),
     status: "active",
     tags: ["React", "Node.js", "Express", "MongoDB"],
@@ -30,7 +30,7 @@ export const projects = [
     category: "Productivity",
     link: "https://example.com/task-manager",
     public: true,
-    createdAt: new Date("2022-11-20").toISOString(),
+
     publishedAt: new Date("2022-12-15").toISOString(),
     status: "completed",
     tags: ["Angular", "Firebase", "TypeScript"],
@@ -42,7 +42,7 @@ export const projects = [
     category: "Content Creation",
     link: "https://example.com/blogging",
     public: true,
-    createdAt: new Date("2023-08-05").toISOString(),
+
     publishedAt: new Date("2023-09-01").toISOString(),
     status: "active",
     tags: ["Next.js", "Prisma", "SQLite"],
@@ -54,7 +54,7 @@ export const projects = [
     category: "Utility",
     link: "https://example.com/weather",
     public: false,
-    createdAt: new Date("2023-03-12").toISOString(),
+
     publishedAt: new Date("2023-04-01").toISOString(),
     status: "completed",
     tags: ["Vue.js", "APIs", "OpenWeatherMap"],

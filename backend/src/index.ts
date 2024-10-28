@@ -2,27 +2,112 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { projectSchema } from "./db/schema/projectValidation";
+import {
+  projectSchema,
+  projectDbSchema,
+  projectResponseSchema,
+} from "./db/schema/projectValidation";
 import db from "./db/db";
 import { createProjectsTable } from "./db/tables";
+import { z } from "zod";
 
 const app = new Hono();
-app.use("*", cors());
+app.use("*", cors({ origin: "http://localhost:5173", credentials: true }));
 
 // Opprett tabellen ved oppstart
 createProjectsTable();
 
 // Hent alle prosjekter
+// app.get("/api/projects", (c) => {
+//   const projectsFromDb = db.prepare("SELECT * FROM projects").all();
+
+//   // Valider data fra databasen
+//   const projects = projectsFromDb.map((project) => {
+//     const validatedDbProject = projectDbSchema.parse(project);
+
+//     // Transformer til response format
+//     return projectResponseSchema.parse({
+//       ...validatedDbProject,
+//       public: Boolean(validatedDbProject.public),
+//       tags: validatedDbProject.tags ? validatedDbProject.tags.split(",") : [],
+//     });
+//   });
+
+//   return c.json({
+//     success: true,
+//     data: projects,
+//   });
+// });
+
 app.get("/api/projects", (c) => {
-  const projects = db.prepare("SELECT * FROM projects").all();
-  return c.json({
-    success: true,
-    data: projects.map((p) => ({
-      ...p,
-      public: Boolean(p.public),
-      tags: p.tags ? p.tags.split(",") : [],
-    })),
-  });
+  try {
+    const projects = db.prepare("SELECT * FROM projects").all();
+    console.log("Projects from database:", projects); // Legg til denne
+    return c.json({
+      success: true,
+      data: projects,
+    });
+  } catch (error) {
+    console.error("Database error:", error); // Legg til denne
+    return c.json(
+      {
+        success: false,
+        error: "Failed to fetch projects",
+      },
+      500
+    );
+  }
+});
+
+// Hent ett spesifikt prosjekt
+app.get("/api/projects/:id", (c) => {
+  try {
+    const id = Number(c.req.param("id"));
+    const result = db.prepare("SELECT * FROM projects WHERE id = ?").get(id);
+
+    if (!result) {
+      return c.json(
+        {
+          success: false,
+          error: "Project not found",
+        },
+        404
+      );
+    }
+
+    // Valider at data fra DB matcher forventet format
+    const dbProject = projectDbSchema.parse(result);
+
+    // Transformer til response format
+    const responseProject = projectResponseSchema.parse({
+      ...dbProject,
+      public: Boolean(dbProject.public),
+      tags: dbProject.tags ? dbProject.tags.split(",") : [],
+    });
+
+    return c.json({
+      success: true,
+      data: responseProject,
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return c.json(
+        {
+          success: false,
+          error: "Invalid data format in database",
+        },
+        500
+      );
+    }
+
+    return c.json(
+      {
+        success: false,
+        error: "Failed to fetch project",
+      },
+      500
+    );
+  }
 });
 
 // Opprett nytt prosjekt
@@ -31,7 +116,7 @@ app.post("/api/projects", async (c) => {
     const body = await c.req.json();
     const project = projectSchema.parse(body);
 
-    const result = db
+    const dbProject = db
       .prepare(
         `
       INSERT INTO projects (title, description, category, link, public, status, tags, publishedAt)
@@ -45,58 +130,46 @@ app.post("/api/projects", async (c) => {
         tags: project.tags?.join(","),
       });
 
+    // Valider database resultat
+    const validatedDbProject = projectDbSchema.parse(dbProject);
+
+    // Transform til response format
+    const responseProject = projectResponseSchema.parse({
+      ...validatedDbProject,
+      public: Boolean(validatedDbProject.public),
+      tags: validatedDbProject.tags ? validatedDbProject.tags.split(",") : [],
+    });
+
     return c.json({
       success: true,
-      data: {
-        ...result,
-        public: Boolean(result.public),
-        tags: result.tags ? result.tags.split(",") : [],
-      },
+      data: responseProject,
     });
   } catch (error) {
     return c.json(
       {
         success: false,
         error:
-          error instanceof Error ? error.message : "Failed to create project",
+          error instanceof z.ZodError
+            ? error.errors[0].message
+            : "Failed to create project",
       },
       400
     );
   }
 });
 
-// Slett prosjekt
-app.delete("/api/projects/:id", (c) => {
-  const id = c.param("id");
-  const result = db.prepare("DELETE FROM projects WHERE id = ?").run(id);
-
-  if (result.changes === 0) {
-    return c.json(
-      {
-        success: false,
-        error: "Project not found",
-      },
-      404
-    );
-  }
-
-  return c.json({ success: true });
-});
-
-// Oppdater prosjekt
 app.patch("/api/projects/:id", async (c) => {
   try {
-    const id = c.param("id");
+    const id = c.req.param("id");
     const body = await c.req.json();
     const updates = projectSchema.partial().parse(body);
 
-    // Bygg update query
     const fields = Object.keys(updates);
     const updates_sql = fields
       .map((field) => `${field} = @${field}`)
       .join(", ");
 
-    const result = db
+    const dbProject = db
       .prepare(
         `
       UPDATE projects 
@@ -113,7 +186,7 @@ app.patch("/api/projects/:id", async (c) => {
         tags: updates.tags?.join(","),
       });
 
-    if (!result) {
+    if (!dbProject) {
       return c.json(
         {
           success: false,
@@ -123,32 +196,75 @@ app.patch("/api/projects/:id", async (c) => {
       );
     }
 
+    // Valider database resultat
+    const validatedDbProject = projectDbSchema.parse(dbProject);
+
+    // Transform til response format
+    const responseProject = projectResponseSchema.parse({
+      ...validatedDbProject,
+      public: Boolean(validatedDbProject.public),
+      tags: validatedDbProject.tags ? validatedDbProject.tags.split(",") : [],
+    });
+
     return c.json({
       success: true,
-      data: {
-        ...result,
-        public: Boolean(result.public),
-        tags: result.tags ? result.tags.split(",") : [],
-      },
+      data: responseProject,
     });
   } catch (error) {
     return c.json(
       {
         success: false,
         error:
-          error instanceof Error ? error.message : "Failed to update project",
+          error instanceof z.ZodError
+            ? error.errors[0].message
+            : "Failed to update project",
       },
       400
     );
   }
 });
 
+// Slett et prosjekt
+app.delete("/api/projects/:id", (c) => {
+  try {
+    const id = Number(c.req.param("id"));
+
+    // Sjekk først om prosjektet eksisterer
+    const exists = db.prepare("SELECT id FROM projects WHERE id = ?").get(id);
+
+    if (!exists) {
+      return c.json(
+        {
+          success: false,
+          error: "Project not found",
+        },
+        404
+      );
+    }
+
+    // Slett prosjektet
+    db.prepare("DELETE FROM projects WHERE id = ?").run(id);
+
+    return c.json({
+      success: true,
+      data: null,
+    });
+  } catch (error) {
+    return c.json(
+      {
+        success: false,
+        error: "Failed to delete project",
+      },
+      500
+    );
+  }
+});
+
 // Start server
 
-const port = 3000;
-
+const port = 3999;
+console.log(`Server is running on port ${port}`);
 serve({
   fetch: app.fetch,
-  port: 3000,
+  port,
 });
-console.log(`Server is running on port${port}`);

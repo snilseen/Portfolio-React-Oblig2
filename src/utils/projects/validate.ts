@@ -13,19 +13,22 @@
 // });
 
 import { z } from "zod";
-export { projectSchema, projectsSchema };
 
-const projectSchema = z.object({
-  id: z.number(),
+export const projectSchema = z.object({
+  id: z.number().optional(),
   title: z.string().min(1, "Title is required"),
-  description: z.string().optional(),
-  category: z.string().optional(),
-  link: z.string().url("Invalid URL format").optional(),
-  public: z.boolean().optional(),
-  createdAt: z.string().optional(),
-  publishedAt: z.string().optional(),
-  status: z.enum(["active", "completed"]).optional(),
-  tags: z.array(z.string()).optional(),
+  description: z.string().nullable(),
+  category: z.string().nullable(),
+  link: z.string().url("Invalid URL format").nullable(),
+  public: z.union([z.boolean(), z.number()]).transform((val) => Boolean(val)),
+  publishedAt: z.string().nullable(),
+  status: z.enum(["active", "completed"]),
+  tags: z
+    .union([z.string().transform((str) => str.split(",")), z.array(z.string())])
+    .transform((val) => (Array.isArray(val) ? val : [])),
 });
 
-const projectsSchema = z.array(projectSchema);
+export const projectsSchema = z.array(projectSchema);
+
+// Utled type fra schema
+export type Project = z.infer<typeof projectSchema>;

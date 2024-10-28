@@ -1,7 +1,5 @@
-import db from "./db";
-
 export function createProjectsTable() {
-  db.exec(`
+  return `
     CREATE TABLE IF NOT EXISTS projects (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
@@ -11,7 +9,8 @@ export function createProjectsTable() {
       public INTEGER DEFAULT 0,
       status TEXT DEFAULT 'active',
       tags TEXT,
-      publishedAt TEXT
+      published_at TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
     )
-  `);
+  `;
 }

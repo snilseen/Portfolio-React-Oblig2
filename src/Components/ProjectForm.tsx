@@ -29,6 +29,7 @@ export function ProjectForm({ onAddProject }: CreateProjectProps) {
       const errorMessage = validateFields([
         { name: "Prosjekttittel", value: formData.title },
         { name: "Prosjekt beskrivelse", value: formData.description },
+        { name: "Kategori", value: formData.category },
       ]);
 
       if (errorMessage) {
@@ -77,137 +78,131 @@ export function ProjectForm({ onAddProject }: CreateProjectProps) {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto mt-5">
+    <div className="w-full max-w-xl mx-auto mt-5">
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
       >
-        <div className="mb-4">
-          <label
-            htmlFor="title"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Prosjekttittel:
-          </label>
+        <label
+          htmlFor="title"
+          className="block text-gray-700 text-sm font-bold mb-2"
+        >
+          Prosjekttittel:
+        </label>
+        <input
+          id="title"
+          value={formData.title}
+          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+          type="text"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+
+        <label
+          htmlFor="description"
+          className="block text-gray-700 text-sm font-bold mb-2 mt-2"
+        >
+          Beskrivelse:
+        </label>
+        <textarea
+          id="description"
+          value={formData.description}
+          onChange={(e) =>
+            setFormData({ ...formData, description: e.target.value })
+          }
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          rows={3}
+        />
+
+        <label
+          htmlFor="category"
+          className="block text-gray-700 text-sm font-bold mb-2 mt-2"
+        >
+          Kategori:
+        </label>
+        <input
+          id="category"
+          value={formData.category}
+          onChange={(e) =>
+            setFormData({ ...formData, category: e.target.value })
+          }
+          type="text"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+
+        <label
+          htmlFor="link"
+          className="block text-gray-700 text-sm font-bold mb-2 mt-2"
+        >
+          Link:
+        </label>
+        <input
+          id="link"
+          value={formData.link}
+          onChange={(e) => setFormData({ ...formData, link: e.target.value })}
+          type="url"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+
+        <label
+          htmlFor="status"
+          className="block text-gray-700 text-sm font-bold mb-2 mt-2"
+        >
+          Status:
+        </label>
+        <select
+          id="status"
+          value={formData.status}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              status: e.target.value as "active" | "completed",
+            })
+          }
+          className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        >
+          <option value="active">Active</option>
+          <option value="completed">Completed</option>
+        </select>
+
+        <label htmlFor="checkbox" className="flex items-center mt-4">
+          <span className="text-gray-700 text-sm font-bold">Public</span>
           <input
-            id="title"
-            value={formData.title}
+            id="checkbox"
+            type="checkbox"
+            checked={formData.public}
             onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
+              setFormData({ ...formData, public: e.target.checked })
+            }
+            className="mr-2 ml-2"
+          />
+        </label>
+
+        <label
+          htmlFor="tags"
+          className="block text-gray-700 text-sm font-bold mb-2 mt-2"
+        >
+          Tags:
+        </label>
+        <div className="flex gap-2 mb-2">
+          <input
+            id="tags"
+            value={currentTag}
+            onChange={(e) => setCurrentTag(e.target.value)}
+            onKeyDown={(e) =>
+              e.key === "Enter" && (e.preventDefault(), handleAddTag())
             }
             type="text"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded flex-1 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Add a tag"
           />
-        </div>
-
-        <div className="mb-4">
-          <label
-            htmlFor="description"
-            className="block text-gray-700 text-sm font-bold mb-2"
+          <button
+            type="button"
+            onClick={handleAddTag}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
-            Beskrivelse:
-          </label>
-          <textarea
-            id="description"
-            value={formData.description}
-            onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            rows={3}
-          />
-        </div>
+            Add
+          </button>
 
-        <div className="mb-4">
-          <label
-            htmlFor="category"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Kategori:
-          </label>
-          <input
-            id="category"
-            value={formData.category}
-            onChange={(e) =>
-              setFormData({ ...formData, category: e.target.value })
-            }
-            type="text"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label
-            htmlFor="link"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Link:
-          </label>
-          <input
-            id="link"
-            value={formData.link}
-            onChange={(e) => setFormData({ ...formData, link: e.target.value })}
-            type="url"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Status:
-          </label>
-          <select
-            value={formData.status}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                status: e.target.value as "active" | "completed",
-              })
-            }
-            className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          >
-            <option value="active">Active</option>
-            <option value="completed">Completed</option>
-          </select>
-        </div>
-
-        <div className="mb-4">
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={formData.public}
-              onChange={(e) =>
-                setFormData({ ...formData, public: e.target.checked })
-              }
-              className="mr-2"
-            />
-            <span className="text-gray-700 text-sm font-bold">Public</span>
-          </label>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Tags:
-          </label>
-          <div className="flex gap-2 mb-2">
-            <input
-              value={currentTag}
-              onChange={(e) => setCurrentTag(e.target.value)}
-              onKeyPress={(e) =>
-                e.key === "Enter" && (e.preventDefault(), handleAddTag())
-              }
-              type="text"
-              className="shadow appearance-none border rounded flex-1 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Add a tag"
-            />
-            <button
-              type="button"
-              onClick={handleAddTag}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >
-              Add
-            </button>
-          </div>
           <div className="flex flex-wrap gap-2">
             {formData.tags.map((tag) => (
               <span

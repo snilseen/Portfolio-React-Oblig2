@@ -1,8 +1,8 @@
 import { useProjects } from "../hooks/useProjects";
-// import { format } from "date-fns";
-// import { nb } from "date-fns/locale";
+
 import ProjectList from "../Components/ProjectList";
 import { ProjectForm } from "../Components/ProjectForm";
+import Layout from "../Components/Layout";
 
 function ProjectPage() {
   const { error, loading, createProject } = useProjects();
@@ -18,8 +18,10 @@ function ProjectPage() {
   return (
     <div className="flex flex-col text-white">
       <h1 className="text-white font-bold m-5 ">Projects</h1>
+      <Layout>
+        <ProjectList />
+      </Layout>
       <ProjectForm onAddProject={createProject} />
-      <ProjectList />
     </div>
   );
 }

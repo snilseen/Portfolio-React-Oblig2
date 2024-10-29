@@ -1,5 +1,5 @@
 import { Project } from "../utils/projects/validate";
-
+import { format } from "date-fns";
 interface ProjectCardProps {
   project: Project;
 }
@@ -12,15 +12,6 @@ function ProjectCard({ project }: ProjectCardProps) {
           <h3 className="text-xl font-semibold text-gray-900">
             {project.title}
           </h3>
-          <span
-            className={`px-2 py-1 rounded text-sm ${
-              project.status === "active"
-                ? "bg-green-100 text-green-800"
-                : "bg-gray-100 text-gray-800"
-            }`}
-          >
-            {project.status}
-          </span>
         </div>
 
         {project.description && (
@@ -66,9 +57,18 @@ function ProjectCard({ project }: ProjectCardProps) {
           >
             {project.public ? "Public" : "Private"}
           </span>
+          <span
+            className={`px-2 py-1 rounded text-sm ${
+              project.status === "active"
+                ? "bg-green-100 text-green-800"
+                : "bg-gray-100 text-gray-800"
+            }`}
+          >
+            {project.status}
+          </span>
           {project.publishedAt && (
             <span className="text-sm text-gray-500">
-              {new Date(project.publishedAt).toLocaleDateString()}
+              {format(new Date(project.publishedAt), "dd/MM/yyyy")}
             </span>
           )}
         </div>

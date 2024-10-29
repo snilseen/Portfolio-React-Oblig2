@@ -1,17 +1,3 @@
-// import { z } from "zod";
-
-//
-
-// const projectSchema = z.object({
-//   id: z.number(),
-//   title: z.string(),
-//   description: z.string(),
-//   createdAt: z.string(),
-//   category: z.string(),
-//   link: z.string(),
-//   public: z.boolean(),
-// });
-
 import { z } from "zod";
 
 export const projectSchema = z.object({

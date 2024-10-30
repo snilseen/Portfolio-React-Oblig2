@@ -1,4 +1,3 @@
-// src/validation/projectSchema.ts
 import { z } from "zod";
 
 // Schema for input når man lager/oppdaterer et prosjekt

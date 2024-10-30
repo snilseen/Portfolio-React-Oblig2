@@ -23,40 +23,4 @@ export const projects = [
     status: "active",
     tags: ["React", "Node.js", "Express", "MongoDB"],
   },
-  {
-    title: "Task Management App",
-    description:
-      "A task management tool with project-based workflows and team collaboration features.",
-    category: "Productivity",
-    link: "https://example.com/task-manager",
-    public: true,
-
-    publishedAt: new Date("2022-12-15").toISOString(),
-    status: "completed",
-    tags: ["Angular", "Firebase", "TypeScript"],
-  },
-  {
-    title: "Blogging Platform",
-    description:
-      "A platform for creating and sharing blog posts with a rich text editor and comment section.",
-    category: "Content Creation",
-    link: "https://example.com/blogging",
-    public: true,
-
-    publishedAt: new Date("2023-09-01").toISOString(),
-    status: "active",
-    tags: ["Next.js", "Prisma", "SQLite"],
-  },
-  {
-    title: "Weather Forecast App",
-    description:
-      "An app that provides real-time weather forecasts for cities around the world.",
-    category: "Utility",
-    link: "https://example.com/weather",
-    public: false,
-
-    publishedAt: new Date("2023-04-01").toISOString(),
-    status: "completed",
-    tags: ["Vue.js", "APIs", "OpenWeatherMap"],
-  },
 ];

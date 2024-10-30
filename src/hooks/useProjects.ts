@@ -32,7 +32,6 @@ export function useProjects() {
         throw new Error(responseData.error || "Failed to fetch projects");
       }
 
-      // Valider data med Zod schema
       const parsedData = projectsSchema.parse(responseData.data);
       setProjects(parsedData);
       setError(null);
@@ -68,7 +67,6 @@ export function useProjects() {
         throw new Error(responseData.error || "Failed to create project");
       }
 
-      // Oppdater prosjektlisten
       await fetchProjects();
       return responseData.data;
     } catch (err) {
@@ -94,7 +92,6 @@ export function useProjects() {
         throw new Error(responseData.error || "Failed to delete project");
       }
 
-      // Oppdater prosjektlisten
       await fetchProjects();
     } catch (err) {
       console.error("Error deleting project:", err);
@@ -123,7 +120,6 @@ export function useProjects() {
         throw new Error(responseData.error || "Failed to update project");
       }
 
-      // Oppdater prosjektlisten
       await fetchProjects();
       return responseData.data;
     } catch (err) {

@@ -8,7 +8,7 @@ function ProjectList() {
   const handleDeleteProject = async (id: number) => {
     try {
       await deleteProject(id);
-      await refreshProjects(); // Oppdater listen etter sletting
+      await refreshProjects();
     } catch (err) {
       console.error("Failed to delete project:", err);
     }

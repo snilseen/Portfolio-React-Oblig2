@@ -42,7 +42,6 @@ export function ProjectForm({ onAddProject }: CreateProjectProps) {
         publishedAt: new Date().toISOString(),
       });
 
-      // Reset form
       setFormData({
         title: "",
         description: "",

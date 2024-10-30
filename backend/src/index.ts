@@ -1,4 +1,3 @@
-// src/index.ts
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
@@ -14,19 +13,18 @@ import { z } from "zod";
 const app = new Hono();
 app.use("*", cors({ origin: "http://localhost:5173", credentials: true }));
 
-// Opprett tabellen ved oppstart
 createProjectsTable();
 
 app.get("/api/projects", (c) => {
   try {
     const projects = db.prepare("SELECT * FROM projects").all();
-    console.log("Projects from database:", projects); // Legg til denne
+    console.log("Projects from database:", projects);
     return c.json({
       success: true,
       data: projects,
     });
   } catch (error) {
-    console.error("Database error:", error); // Legg til denne
+    console.error("Database error:", error);
     return c.json(
       {
         success: false,
@@ -37,7 +35,6 @@ app.get("/api/projects", (c) => {
   }
 });
 
-// Hent ett spesifikt prosjekt
 app.get("/api/projects/:id", (c) => {
   try {
     const id = Number(c.req.param("id"));
@@ -53,10 +50,8 @@ app.get("/api/projects/:id", (c) => {
       );
     }
 
-    // Valider at data fra DB matcher forventet format
     const dbProject = projectDbSchema.parse(result);
 
-    // Transformer til response format
     const responseProject = projectResponseSchema.parse({
       ...dbProject,
       public: Boolean(dbProject.public),
@@ -88,7 +83,6 @@ app.get("/api/projects/:id", (c) => {
   }
 });
 
-// Opprett nytt prosjekt
 app.post("/api/projects", async (c) => {
   try {
     const body = await c.req.json();
@@ -108,10 +102,8 @@ app.post("/api/projects", async (c) => {
         tags: project.tags?.join(","),
       });
 
-    // Valider database resultat
     const validatedDbProject = projectDbSchema.parse(dbProject);
 
-    // Transform til response format
     const responseProject = projectResponseSchema.parse({
       ...validatedDbProject,
       public: Boolean(validatedDbProject.public),
@@ -174,10 +166,8 @@ app.patch("/api/projects/:id", async (c) => {
       );
     }
 
-    // Valider database resultat
     const validatedDbProject = projectDbSchema.parse(dbProject);
 
-    // Transform til response format
     const responseProject = projectResponseSchema.parse({
       ...validatedDbProject,
       public: Boolean(validatedDbProject.public),
@@ -202,12 +192,10 @@ app.patch("/api/projects/:id", async (c) => {
   }
 });
 
-// Slett et prosjekt
 app.delete("/api/projects/:id", (c) => {
   try {
     const id = Number(c.req.param("id"));
 
-    // Sjekk først om prosjektet eksisterer
     const exists = db.prepare("SELECT id FROM projects WHERE id = ?").get(id);
 
     if (!exists) {
@@ -220,7 +208,6 @@ app.delete("/api/projects/:id", (c) => {
       );
     }
 
-    // Slett prosjektet
     db.prepare("DELETE FROM projects WHERE id = ?").run(id);
 
     return c.json({
@@ -237,8 +224,6 @@ app.delete("/api/projects/:id", (c) => {
     );
   }
 });
-
-// Start server
 
 const port = 3999;
 console.log(`Server is running on port ${port}`);

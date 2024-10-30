@@ -1,10 +1,8 @@
 import db from "./db";
 
 function seedProjects() {
-  // Først, slett eksisterende data (valgfritt)
   db.prepare("DELETE FROM projects").run();
 
-  // Legg inn testdata
   const projects = [
     {
       title: "Portfolio Website",

@@ -6,7 +6,6 @@ type ContactFormProps = {
 };
 
 function ContactForm({ onSubmit }: ContactFormProps) {
-  // State for feltene
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");

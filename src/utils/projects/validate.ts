@@ -16,5 +16,4 @@ export const projectSchema = z.object({
 
 export const projectsSchema = z.array(projectSchema);
 
-// Utled type fra schema
 export type Project = z.infer<typeof projectSchema>;
